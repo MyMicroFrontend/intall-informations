@@ -1,0 +1,38 @@
+services:
+  cart:
+    image: next-cart
+    restart: always
+    ports:
+      - 3001:3000
+    volumes:
+      - cart-data:/app
+    networks:
+      - shopping-network
+    environment:
+      NODE_ENV: production
+    build:
+      context: next-cart
+      dockerfile: Dockerfile
+
+  home:
+    image: next-home
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: production
+      CART_DOMAIN: http://cart:3000
+    volumes:
+      - home-data:/app
+    networks:
+      - shopping-network
+    build:
+      context: next-home
+      dockerfile: Dockerfile
+
+networks:
+  shopping-network:
+    driver: bridge
+volumes:
+  cart-data:
+  home-data:
